@@ -1,0 +1,40 @@
+<!--
+ * @Author: xiuquanxu
+ * @Company: kaochong
+ * @Date: 2020-04-02 22:07:19
+ * @LastEditors: xiuquanxu
+ * @LastEditTime: 2020-04-02 23:26:18
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Pcm-Player-Demo</h1>
+    <button onclick="start()">请求播放</button>
+</body>
+</html>
+<script src="pcm-player.js" type="text/javascript"></script>
+<script type="text/javascript">
+function start() {
+    var player = new PcmPlayer();
+    // var xhr = new XMLHttpRequest();
+    // xhr.open('get', 'http://local.h5.com/mygithub/pcm-recorder-player/server/test-pcm-web.pcm');
+    // xhr.send();
+    // xhr.onreadystatechange = function() {
+    //     if (xhr.status === 200) {
+    //         console.log(xhr);
+    //     }
+    // }
+    player.play();
+    fetch('http://local.h5.com/mygithub/pcm-recorder-player/server/test-pcm-web.pcm').then(res => res.arrayBuffer()).then((buffer) => {
+        console.log('buffer:', buffer);
+        const data = new Float32Array(buffer, 0 , buffer.byteLength / 4);
+        player.write(data);
+
+    })
+}
+</script>

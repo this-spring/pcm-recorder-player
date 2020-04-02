@@ -3,55 +3,51 @@
  * @Company: kaochong
  * @Date: 2020-03-30 22:47:53
  * @LastEditors: xiuquanxu
- * @LastEditTime: 2020-04-02 22:01:08
+ * @LastEditTime: 2020-04-03 00:11:03
  */
 function PcmPlayer(config) {
-  this.config = config;
+
+  this.config = !!config ? config : {
+    bufferSize: 512,
+  };
   this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
   this.scriptNode = null;
-  this.buffer = {
-    data: new Uint8Array(44100 * 20), // 20s
-    start: 0,
-    end: 0,
-  }
-}
-
-PcmPlayer.prototype.init = function() {
-  this.scriptNode = this.audioContext.createScriptProcessor(this.config.codec.bufferSize, 1, 1);
-  this.scriptNode.onaudioprocess = function(e) {
-    
-  }
+  this.gainNode = null;
+  this.bufferQue = new Float32Array(0);
 }
 
 PcmPlayer.prototype.play = function() {
-  
+  const _this = this;
+  this.scriptNode = this.audioContext.createScriptProcessor(this.config.bufferSize, 1, 1);
+  this.gainNode = this.audioContext.createGain();
+  this.scriptNode.connect(this.gainNode);
+  this.gainNode.connect(this.audioContext.destination);
+  this.scriptNode.onaudioprocess = function(e) {
+    if (_this.bufferLength()) {
+      e.outputBuffer.getChannelData(0).set(_this.read(_this.config.bufferSize));
+    } else {
+      console.log('silence');
+      // e.outputBuffer.getChannelData(0).set(_this.silence);
+    } 
+  }
 }
 
 PcmPlayer.prototype.read = function(len) {
-  const res = this.buffer.data.slice(this.buffer.start, this.buffer.start + len);
-  this.buffer.start += len;
-  return res;
+  const outBuffer = this.bufferQue.subarray(0, len);
+  const inBuffer = this.bufferQue.subarray(len, this.bufferQue.length);
+  this.bufferQue = inBuffer;
+  return outBuffer;
 }
 
 PcmPlayer.prototype.write = function(buffer) {
-  // 循环队列
-  // const end = this.buffer.end;
-  // const maxSize = this.buffer.data.length;
-  // if ((end + buffer.length) > maxSize) {
-  //  const need = maxSize - end;
-  //  this.buffer.data.set(buffer.slice(0, need), end); 
-   
-  // }
-  this.buffer.data.set(buffer, this.buffer.len);
-  this.buffer.end += buffer.length;
+  // TODO: 此处可以使用循环队列实现，可能减少内存拷贝次数
+  const len = buffer.length + this.bufferQue.length;
+  const newBuffer = new Float32Array(len);
+  newBuffer.set(this.bufferQue, 0);
+  newBuffer.set(buffer, this.bufferQue.length);
+  this.bufferQue = newBuffer;
 }
 
 PcmPlayer.prototype.bufferLength = function() {
-  const end = this.buffer.end;
-  const start = this.buffer.start;
-  const maxSize = this.buffer.length;
-  if (end >= start) {
-    return end - start;
-  }
-  return maxSize - (start - end);
+  return this.bufferQue.length;
 }
