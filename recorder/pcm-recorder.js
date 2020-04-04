@@ -3,7 +3,7 @@
  * @Company: kaochong
  * @Date: 2020-03-30 22:47:07
  * @LastEditors: xiuquanxu
- * @LastEditTime: 2020-04-04 17:27:46
+ * @LastEditTime: 2020-04-04 21:57:29
  */
 
 /**
@@ -17,7 +17,7 @@
        down: true,
  *  }
  */
-function PcmRecorder(config) {
+function PcmRecorder(config, cb) {
   if (!config) {
     config = {
       sampleBites: 16,
@@ -25,7 +25,7 @@ function PcmRecorder(config) {
         || window.webkitAudioContext)()).sampleRate,
       numberChannels: 1,
       fftSize: 512,
-      down: true,
+      down: false,
       debug: true,
     }
   }
@@ -39,6 +39,7 @@ function PcmRecorder(config) {
   this.pcmBuffer = [];
   this.pcmBufferSize = 0;
   this.visualVolume = 0;
+  this.cb = cb;
   this.init();
 }
 
@@ -110,6 +111,7 @@ PcmRecorder.prototype.onaudioprocess = function(e) {
 PcmRecorder.prototype.handlePcm = function(bytes) {
   if (bytes[0] === 0 && bytes[1] === 0) return;
   const data = bytes;
+  this.cb(bytes);
   // const sampleBites = this.config.sampleBites;
   // const dataLength = bytes.length * (sampleBites / 8);
   // const buffer = new ArrayBuffer(dataLength);

@@ -1,0 +1,19 @@
+{
+  "name": "player-server",
+  "version": "1.0.0",
+  "description": "player,server,socket.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "sokect.io",
+    "server",
+    "player"
+  ],
+  "author": "xiuquanxu",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^2.3.0"
+  }
+}

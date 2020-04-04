@@ -1,0 +1,57 @@
+<!--
+ * @Author: xiuquanxu
+ * @Company: kaochong
+ * @Date: 2020-03-30 23:09:50
+ * @LastEditors: xiuquanxu
+ * @LastEditTime: 2020-04-04 22:35:30
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Pcm-Recorder-Demo</h1>
+    <button onclick="start()">开始采集</button>
+    <button onclick="download()">下载PCM</button>
+    <button onclick="getVoice()">获取音量</button>
+</body>
+</html>
+<script src="./pcm-recorder.js"></script>
+<script src="../socket.io.js/socket.io.js"></script>
+
+<script type="text/javascript">
+
+var socket = io('http://127.0.0.1:8085');
+var pe = null;
+
+function receivePcmFloat32(data) {
+  socket.emit('pcm-data', {
+    pcm: new Float32Array(data),
+  });
+}
+
+function start() {
+  var config = {
+    sampleBites: 16,
+    sampleRate: (new (window.AudioContext
+      || window.webkitAudioContext)()).sampleRate,
+    numberChannels: 1,
+    fftSize: 512,
+    down: false,
+    debug: true,
+  };
+  pe = new PcmRecorder(config, receivePcmFloat32);
+  pe.start();
+}
+
+function download() {
+  pe.down();
+}
+
+function getVoice() {
+  console.log(pe.getVolume());
+}
+</script>
