@@ -3,7 +3,7 @@
  * @Company: kaochong
  * @Date: 2020-03-30 22:47:07
  * @LastEditors: xiuquanxu
- * @LastEditTime: 2020-03-30 23:38:20
+ * @LastEditTime: 2020-04-04 17:27:46
  */
 
 /**
@@ -109,21 +109,22 @@ PcmRecorder.prototype.onaudioprocess = function(e) {
 
 PcmRecorder.prototype.handlePcm = function(bytes) {
   if (bytes[0] === 0 && bytes[1] === 0) return;
-  const sampleBites = this.config.sampleBites;
-  const dataLength = bytes.length * (sampleBites / 8);
-  const buffer = new ArrayBuffer(dataLength);
-  const data = new DataView(buffer);
-  let offset = 0;
-  let i = 0;
-  let len = 0;
-  for (i = 0, len = bytes.length; i < len; i += 1, offset += 2) {
-    const s = Math.max(-1, Math.min(1, [bytes[i]]));
-    data.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
-  }
-  const bufferLeng = this.analyser.frequencyBinCount;
-  const uData = new Uint8Array(bufferLeng);
-  this.analyser.getByteTimeDomainData(uData);
-  this.visualVolume = 0.1 + (Math.abs(uData[0] - 128) / 128);
+  const data = bytes;
+  // const sampleBites = this.config.sampleBites;
+  // const dataLength = bytes.length * (sampleBites / 8);
+  // const buffer = new ArrayBuffer(dataLength);
+  // const data = new DataView(buffer);
+  // let offset = 0;
+  // let i = 0;
+  // let len = 0;
+  // for (i = 0, len = bytes.length; i < len; i += 1, offset += 2) {
+  //   const s = Math.max(-1, Math.min(1, [bytes[i]]));
+  //   data.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+  // }
+  // const bufferLeng = this.analyser.frequencyBinCount;
+  // const uData = new Uint8Array(bufferLeng);
+  // this.analyser.getByteTimeDomainData(uData);
+  // this.visualVolume = 0.1 + (Math.abs(uData[0] - 128) / 128);
 
   if (this.config.down) {
     this.pcmBufferSize += data.byteLength;

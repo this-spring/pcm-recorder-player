@@ -3,7 +3,7 @@
  * @Company: kaochong
  * @Date: 2020-04-02 22:07:19
  * @LastEditors: xiuquanxu
- * @LastEditTime: 2020-04-02 23:26:18
+ * @LastEditTime: 2020-04-04 17:31:42
  -->
 <!DOCTYPE html>
 <html lang="en">
@@ -21,18 +21,10 @@
 <script type="text/javascript">
 function start() {
     var player = new PcmPlayer();
-    // var xhr = new XMLHttpRequest();
-    // xhr.open('get', 'http://local.h5.com/mygithub/pcm-recorder-player/server/test-pcm-web.pcm');
-    // xhr.send();
-    // xhr.onreadystatechange = function() {
-    //     if (xhr.status === 200) {
-    //         console.log(xhr);
-    //     }
-    // }
     player.play();
-    fetch('http://local.h5.com/mygithub/pcm-recorder-player/server/test-pcm-web.pcm').then(res => res.arrayBuffer()).then((buffer) => {
-        console.log('buffer:', buffer);
-        const data = new Float32Array(buffer, 0 , buffer.byteLength / 4);
+    fetch('http://local.h5.com/mygithub/pcm-recorder-player/server/test-pcm-web-2.pcm').then(res => res.arrayBuffer()).then((buffer) => {
+        console.log('buffer:', buffer, buffer.byteLength / 4);
+        const data = new Float32Array(buffer);
         player.write(data);
 
     })
