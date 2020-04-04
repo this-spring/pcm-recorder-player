@@ -3,7 +3,7 @@
  * @Company: kaochong
  * @Date: 2020-03-30 22:47:07
  * @LastEditors: xiuquanxu
- * @LastEditTime: 2020-04-04 21:57:29
+ * @LastEditTime: 2020-04-05 00:25:47
  */
 
 /**
@@ -111,7 +111,14 @@ PcmRecorder.prototype.onaudioprocess = function(e) {
 PcmRecorder.prototype.handlePcm = function(bytes) {
   if (bytes[0] === 0 && bytes[1] === 0) return;
   const data = bytes;
-  this.cb(bytes);
+  // convert float audio data to 16-bit PCM
+  // var buffer = new ArrayBuffer(data.length * 2)
+  // var output = new DataView(buffer);
+  // for (var i = 0, offset = 0; i < data.length; i++, offset += 2) {
+  //     var s = Math.max(-1, Math.min(1, data[i]));
+  //     output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+  // }
+  this.cb(data.buffer);
   // const sampleBites = this.config.sampleBites;
   // const dataLength = bytes.length * (sampleBites / 8);
   // const buffer = new ArrayBuffer(dataLength);

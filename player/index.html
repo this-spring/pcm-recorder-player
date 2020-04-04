@@ -3,7 +3,7 @@
  * @Company: kaochong
  * @Date: 2020-04-02 22:07:19
  * @LastEditors: xiuquanxu
- * @LastEditTime: 2020-04-04 22:35:01
+ * @LastEditTime: 2020-04-05 00:00:40
  -->
 <!DOCTYPE html>
 <html lang="en">
@@ -28,9 +28,11 @@ function start() {
 
 <script src="../socket.io.js/socket.io.js"></script>
 <script>
-  var socket = io('http://127.0.0.1:8085');
+  var socket = io('http://127.0.0.1:8085', {transports: ['websocket']});
+  socket.binaryType = 'arraybuffer';
   socket.on('to-player', function (data) {
-    console.log('player receive pcm: ', data);
-    player.write(new Float32Array(data));
+    const buffer = new Float32Array(data);
+    console.log('player receive pcm: ', buffer.length);
+    player.write(buffer);
   });
 </script>

@@ -3,7 +3,7 @@
  * @Company: kaochong
  * @Date: 2020-03-30 23:09:50
  * @LastEditors: xiuquanxu
- * @LastEditTime: 2020-04-04 22:35:30
+ * @LastEditTime: 2020-04-05 00:23:56
  -->
 <!DOCTYPE html>
 <html lang="en">
@@ -24,12 +24,14 @@
 
 <script type="text/javascript">
 
-var socket = io('http://127.0.0.1:8085');
+var socket = io('http://127.0.0.1:8085', {transports: ['websocket']});
+socket.binaryType = 'arraybuffer';
 var pe = null;
 
 function receivePcmFloat32(data) {
+
   socket.emit('pcm-data', {
-    pcm: new Float32Array(data),
+    pcm: data,
   });
 }
 

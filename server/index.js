@@ -3,7 +3,7 @@
  * @Company: kaochong
  * @Date: 2020-04-04 18:01:38
  * @LastEditors: xiuquanxu
- * @LastEditTime: 2020-04-04 22:54:42
+ * @LastEditTime: 2020-04-05 00:27:25
  */
 var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
@@ -31,8 +31,17 @@ function handler (req, res) {
 }
 
 io.on('connection', function (socket) {
+  var socketId = socket.id;
+  console.log(socketId);
   socket.on('pcm-data', function (data) {
-    console.log('server receive data:', data);
+    // console.log('server receive data:', data);
+    // io.on('connection',function(socket){});//建立连接
+    // io.sockets.emit(约定参数，data)；//向全体人员广播
+    // io.emit(约定参数, data);//向全体人员广播
+    // socket.emit(约定参数，data)//发送信息
+    // socket.on(约定参数，callback）；//接收信息
+    // socket.on('disconnect',callback);//用户断开连接触发事件
+    console.log(data.pcm.length);
     socket.broadcast.emit('to-player', data.pcm);
   });
 });
