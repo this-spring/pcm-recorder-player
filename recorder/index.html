@@ -29,7 +29,6 @@ socket.binaryType = 'arraybuffer';
 var pe = null;
 
 function receivePcmFloat32(data) {
-
   socket.emit('pcm-data', {
     pcm: data,
   });
